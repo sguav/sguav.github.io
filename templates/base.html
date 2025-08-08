@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1><a href="/">{{ config.title }}</a></h1>
+        <p>{{ config.description }}</p>
+        <nav>
+            <a href="/">/dev/sguav</a>
+            | <a href="/about">About</a>
+            <!-- | <a href="/tags">Tags</a> -->
+        </nav>
+        <hr>
+    </header>
+    {% block content %}{% endblock content %}
+    <footer><hr><p><small>© {{ now() | date(format="%Y") }} /dev/sguav</small></p></footer>
+</body>
+</html>

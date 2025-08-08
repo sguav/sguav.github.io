@@ -1,0 +1,15 @@
+body {
+  font-family: monospace;
+  background-color: #111;
+  color: #eee;
+  max-width: 650px;
+  margin: auto;
+  padding: 2rem;
+}
+a {
+  color: #5af;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
