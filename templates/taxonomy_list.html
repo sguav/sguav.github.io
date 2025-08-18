@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <h2>Tags</h2>
+</header>
+
+{% set blogtags = get_taxonomy(kind="tags") %}
+
+<div class="tag-cloud">
+  {% for tag in blogtags.items %}
+    {% set count = tag.pages | length %}
+    <a href="{{ get_taxonomy_url(kind="tags", name=tag.name) }}"
+       style="font-size: {{ 0.8 + (count / 10) }}em;">
+       {{ tag.name }}
+    </a>
+  {% endfor %}
+</div>
+
+
+
+{% set blogtags = get_taxonomy(kind="tags") %}
+
+
+{% for tag in blogtags.items %}
+<h3 id="{{ tag.name | slugify }}">
+    {{ tag.name }}
+</h3>
+
+<ul>
+    {% for post in tag.pages %}
+    <li>
+        <time datetime="{{ post.date }}">{{ post.date }}</time></dt>
+        &ndash;
+        <a href="{{ post.permalink | safe }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endfor %}
+
+{% endblock content %}

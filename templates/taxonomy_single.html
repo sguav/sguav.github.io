@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <h2>Tag: {{ term.name }}</h2>
+</header>
+
+<ul>
+  {% for page in term.pages %}
+    <li><a href="{{ page.permalink }}">{{ page.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock content %}
