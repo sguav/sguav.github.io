@@ -14,6 +14,12 @@
         <li><a href="{{ page.permalink }}">{{ page.title }}</a> — {{ page.date | date(format="%Y-%m-%d") }}</li>
       {% endfor %}
     </ul>
+  {% else %}
+    <pre data-lang="ld" style="color:#0dff00;" class="language-ld ">
+      <code class="language-ld" data-lang="ld">
+      <span>~$ cat {{section.title}} > /dev/null 2>&1</span>
+      </code>
+    </pre>
   {% endif %}
 </article>
 {% endblock content %}
