@@ -3,5 +3,14 @@
 <article>
   <h1>{{ page.title }}</h1>
   {{ page.content | safe }}
+  {% if page.taxonomies.tags %}
+    <hr>
+    Tags:
+    {% for tag in page.taxonomies.tags %}
+        <span>
+          <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">{{ tag }}</a>
+        </span>
+    {% endfor %}
+  {% endif %}
 </article>
 {% endblock content %}
