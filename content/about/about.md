@@ -14,6 +14,6 @@ What I am interested in and I might publish here:
 - Homelabbing experiments
 - Hardware
 
-I'll be showing roughly my workflows and productions, but I'm not a teacher unfortunately.
+I'll be sharing my workflows and projects, though I'm no teacher.
 
-Expect bugs. Expect noise. Or just don't expect anything, it's way better.
+Expect bugs. Expect noise. Or, best of all, expect nothing at all.
