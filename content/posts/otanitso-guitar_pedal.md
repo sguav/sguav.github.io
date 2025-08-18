@@ -1,7 +1,9 @@
 +++
 title = "Otanitso - A STM32 based short memory audio phrase mangler"
 date = "2025-08-08"
+[taxonomies]
 tags = ["hw", "fw", "stm32", "audio"]
+categories = ["flagship-prj"]
 +++
 
 `Otanitso` is the reversed of the word _ostinato_.
