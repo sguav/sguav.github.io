@@ -1,10 +1,14 @@
 +++
-title = "Back to ~~XBMC~~ Kodi with ~~LibreELEC~~ OSMC"
+title = "Back to Kodi with OSMC"
+styled_title = "Back to ~~XBMC~~ Kodi with ~~LibreELEC~~ OSMC"
 date = "2025-09-20"
 [taxonomies]
 tags = ["sw", "hw", "rpi", "sysadmin", "media"]
 categories = ["quick-wins", "article"]
 +++
+
+> **Note:** _This is the first post on the blog. It’s not the most technical deep-dive yet, but rather a write-up of a recent experiment setting up a media player. Think of it as a warm-up entry while I prepare more in-depth articles._
+>
 
 I still remember when it was called XBMC: it felt like regaining the freedom and ownership of media we once had with VHS and DVDs.
 
@@ -42,11 +46,11 @@ Booted with absolutely no issues, I didn't even have to change hdmi options.
 So, I guess that we'll install Kodi on a debian based distribution then.
 
 ```bash
-sudo apt update
-sudo apt upgrade -y
-sudo apt install kodi -y
-kodi-standalone
-...
+$ sudo apt update
+$ sudo apt upgrade -y
+$ sudo apt install kodi -y
+$ kodi-standalone
+[...]
 Segmentation fault
 ```
 
@@ -56,12 +60,12 @@ Apparently not.
 
 Eventually I discovered [OSMC](https://osmc.tv/download/), which already looks better because...
 [They've actually designed a dedicated hardware for that](https://osmc.tv/vero/)!
-I gave it a try, I felt more confident in the project since they provide a convenient [AppImage installer](https://ftp.fau.de/osmc/osmc/download/installers/osmc-installer.AppImage) to automatically configure the SD card image.
+I gave the software a try, I felt more confident in the project since they provide a convenient [AppImage installer](https://ftp.fau.de/osmc/osmc/download/installers/osmc-installer.AppImage) to automatically configure the SD card image.
 It boots and starts installing the necessary files.
 
-On my 1080p portable HDMI screen I see then the reboot splash and then..._just static noise_?
+On my 1080p portable HDMI screen I see the reboot splash and then..._just static noise_?
 
-It turns out on the main 4k/50in screen it works fine, but apparently there are some issues with RPI4 and legacy displays, a problem I won't delve in this time.
+It turns out on the main 4k/50" screen it works fine, but apparently there are some issues with RPI4 and legacy displays, a problem I won't delve in this time.
 And after setting up the library connections and jellyfin plugin (the wifi connection must be setup at the SD configuration, so that the RPI wireless peripheral is correctly installed) everything just worked.
 
 I suppose I've found the solution!
@@ -76,25 +80,26 @@ Dual HDMI is great, but in the media scenario it’s not as useful, a stronger h
 
 Kodi is great, but in 2025 the standard UI - at least used in the OSMC setup - is kind of dated looking.
 
-##TODO Insert photo##
+<img src="/images/kodi-menu.png" alt="Clean and minimal, old looking Kodi standard menu" style="max-width: 100%; height: auto;">
 
 There are some better interfaces, which is easy enough to download and install, but in general I guess there is some work to do on the UX and the feeling of the graphics.
-Not much of a critic (as I only make `TUIs` - if I really have to) but a strong suggestion to make a valid alternative to streaming services for non technical people.
+Not much of a critic (as I only make `TUIs` - if I really have to) but a strong suggestion in order to make a valid alternative to streaming services for non technical people.
 
 Then, the worse point for me, media server integration.
-There is no specific advantage, so if I spent several days setting up my media server and streaming player with hardware accelerated transcoding, I still have to kludge the jellyfin way into kodi to use that.
+There is no specific advantage in using Kodi/Emby.
+If I spent several days setting up my media server and streaming player with hardware accelerated transcoding, I then still have to kludge the jellyfin way into kodi to use that.
 If not, use samba shares or other file system shares 🤔
 
-Samba shares with my NAS work fine, but it should really be simpler (ideally _off the shelf_) to just connect Kodi directly to a Jellyfin server and synchronize libraries.
-The jellyfin plugins worked just fine, but I'm again thinking of the layman, the ecosystem still feels too fragmented.
+Samba with my NAS works fine, but it should really be simpler (ideally _off the shelf_) to just connect Kodi directly to a Jellyfin server and synchronize libraries.
+The jellyfin plugins worked just fine, but I'm thinking of the layman, the ecosystem still feels too fragmented.
 
 Now for the pros:
 
 - full linux environment with native ssh access 💖
-- the OSMC installation media setup works great
+- the OSMC installation media setup works great and is multiplatform 💯
 - OSMC installed and ran flawlessly
 - Library setup and sync is easy and works very well (3/10 difficulty for a 'layman', 0/10 for a sysadmin)
-- Playback is smooth (4k - possibly transcoded - 30fps over wifi)
+- Playback is smooth (4k - possibly transcoded, didn't really check - 30fps over wifi)
 
 And one great surprise for me: CEC over HDMI works perfectly on first try!
 This means that my family is going to _actually use it_, as they won't be restricted by a less friendly looking keyboard laying around the couch, but the TV remote works with Kodi now.
@@ -115,15 +120,15 @@ But if I had to draft the system architecture for such a device:
 
 For the software:
 
-- eizard-like setup for the libraries
-- native Jellyfin (and Plex/Emby) integration without plugins
+- wizard-like setup for the libraries
+- native Jellyfin (and Plex/Emby) integration
 - unified search across local files + media servers (seems to work, but with many duplicates)
 - automatic codec and display optimization (e.g., detect 4k60 HDR and adjust)
 - minimal “streaming service” mode with only essential functions exposed
 - optional advanced mode for power users (SSH, Samba, NFS, etc.)
 - continuous updates without breaking configs (transactional upgrades, rollbacks)
 - integrated parental controls and multi-user profiles
-- remote control app for Android/iOS (paired with HDMI-CEC)
+- remote control HDMI-CEC + apps
 
 ## Conclusion
 
@@ -135,4 +140,4 @@ Kodi isn’t perfect, the UI feels dated, and media server integration is still 
 That’s already a win.
 Next step will be trying proper dedicated hardware (Vero4k or similar) to see if it fixes the 4k/60fps ceiling and gives a cleaner experience.
 
-For now, mission accomplished: back to Kodi, in 2025.
+For now, job done: back to Kodi, in 2025.
