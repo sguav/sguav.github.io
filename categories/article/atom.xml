@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - article</title>
+    <link rel="self" type="application/atom+xml" href="https://sguav.github.io/categories/article/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://sguav.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-09-20T00:00:00+00:00</updated>
+    <id>https://sguav.github.io/categories/article/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Back to Kodi with OSMC</title>
+        <published>2025-09-20T00:00:00+00:00</published>
+        <updated>2025-09-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://sguav.github.io/posts/libreelec-osmc/"/>
+        <id>https://sguav.github.io/posts/libreelec-osmc/</id>
+        
+        <content type="html" xml:base="https://sguav.github.io/posts/libreelec-osmc/">&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;&#x2F;strong&gt; &lt;em&gt;This is the first post on the blog. It’s not the most technical deep-dive yet, but rather a write-up of a recent experiment setting up a media player. Think of it as a warm-up entry while I prepare more in-depth articles.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;I still remember when it was called XBMC: it felt like regaining the freedom and ownership of media we once had with VHS and DVDs.&lt;&#x2F;p&gt;
+&lt;p&gt;In 2025, being utterly dissatisfied with the current cesspool of smart android tv malware, clunky casting devices, and so forth, I am going back to it, via LibreELEC and raspberry pi.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ve dusted off my RPI4B, and removed its SD card.
+I did a &lt;code&gt;dd&lt;&#x2F;code&gt; image copy of it, as there were still some data of my second home assistant server iteration (which I&#x27;m not running on ARM&#x2F;RPI anymore), and then rewritten it with the latest &lt;a href=&quot;https:&#x2F;&#x2F;releases.libreelec.tv&#x2F;LibreELEC-RPi4.aarch64-12.2.0.img.gz&quot;&gt;LibreELEC image for RPI 4&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; gunzip LibreELEC-RPi4.aarch64-12.2.0.img.gz
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; sudo dd if=.&#x2F;LibreELEC-RPi4.aarch64-12.2.0.img of=&#x2F;dev&#x2F;sdd bs=4M status=progress
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then I popped the SD card back in, a previously working 7&quot; HDMI display, and a keyboard to the RPI.&lt;&#x2F;p&gt;
+&lt;p&gt;Good start... then nothing.
+Just a promising boot sequence, stopping to the not-so-impressive &lt;code&gt;LibreELEC (Official): 12.2.0&lt;&#x2F;code&gt; white on black screen.&lt;&#x2F;p&gt;
+&lt;p&gt;Adding the &lt;code&gt;ssh&lt;&#x2F;code&gt; empty file to the boot partition didn&#x27;t open up the RPI to ssh, and neither did tweaking &lt;code&gt;config.txt&lt;&#x2F;code&gt;.
+At this point I was pondering how I need to build a dedicated LibreELEC hardware, but no time for it now.&lt;&#x2F;p&gt;
+&lt;p&gt;Searching online I saw that some users have found issues with the &lt;code&gt;aarch64&lt;&#x2F;code&gt; version of LibreELEC combined with RPi4&#x2F;5, and also thought that some regression bugs might have hit for the latest 12.x version.
+And so I downloaded LibreELEC 11.0.6 (arm version) and flashed that, tweaked &lt;code&gt;config.txt&lt;&#x2F;code&gt;, created the ssh file...&lt;&#x2F;p&gt;
+&lt;p&gt;Nothing, even worse.&lt;&#x2F;p&gt;
+&lt;p&gt;Pull the SD out, &lt;code&gt;fsck&lt;&#x2F;code&gt; boot partition, &lt;code&gt;e2fsck&lt;&#x2F;code&gt; storage partition, errors corrected.&lt;&#x2F;p&gt;
+&lt;p&gt;NOTHING.&lt;&#x2F;p&gt;
+&lt;p&gt;And so, could it still be the SD card?
+Downloaded raspios, flashed it, and...
+Booted with absolutely no issues, I didn&#x27;t even have to change hdmi options.&lt;&#x2F;p&gt;
+&lt;p&gt;So, I guess that we&#x27;ll install Kodi on a debian based distribution then.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; sudo apt update
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; sudo apt upgrade&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -y
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; sudo apt install kodi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -y
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; kodi-standalone
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[...]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Segmentation&lt;&#x2F;span&gt;&lt;span&gt; fault
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Apparently not.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;revisiting-the-distro&quot;&gt;Revisiting the distro&lt;&#x2F;h2&gt;
+&lt;p&gt;Eventually I discovered &lt;a href=&quot;https:&#x2F;&#x2F;osmc.tv&#x2F;download&#x2F;&quot;&gt;OSMC&lt;&#x2F;a&gt;, which already looks better because...
+&lt;a href=&quot;https:&#x2F;&#x2F;osmc.tv&#x2F;vero&#x2F;&quot;&gt;They&#x27;ve actually designed a dedicated hardware for that&lt;&#x2F;a&gt;!
+I gave the software a try, I felt more confident in the project since they provide a convenient &lt;a href=&quot;https:&#x2F;&#x2F;ftp.fau.de&#x2F;osmc&#x2F;osmc&#x2F;download&#x2F;installers&#x2F;osmc-installer.AppImage&quot;&gt;AppImage installer&lt;&#x2F;a&gt; to automatically configure the SD card image.
+It boots and starts installing the necessary files.&lt;&#x2F;p&gt;
+&lt;p&gt;On my 1080p portable HDMI screen I see the reboot splash and then...&lt;em&gt;just static noise&lt;&#x2F;em&gt;?&lt;&#x2F;p&gt;
+&lt;p&gt;It turns out on the main 4k&#x2F;50&quot; screen it works fine, but apparently there are some issues with RPI4 and legacy displays, a problem I won&#x27;t delve in this time.
+And after setting up the library connections and jellyfin plugin (the wifi connection must be setup at the SD configuration, so that the RPI wireless peripheral is correctly installed) everything just worked.&lt;&#x2F;p&gt;
+&lt;p&gt;I suppose I&#x27;ve found the solution!
+So now, after the story part, some considerations.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;pros-and-cons&quot;&gt;Pros and Cons&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s start with the downsides.&lt;&#x2F;p&gt;
+&lt;p&gt;While not an OSMC issue, raspberrypi 4 is still stuck at 30fps for 4k output.
+Dual HDMI is great, but in the media scenario it’s not as useful, a stronger hardware platform becomes necessary - which gives more points to consider Vero4k+.&lt;&#x2F;p&gt;
+&lt;p&gt;Kodi is great, but in 2025 the standard UI - at least used in the OSMC setup - is kind of dated looking.&lt;&#x2F;p&gt;
+&lt;img src=&quot;&#x2F;images&#x2F;kodi-menu.png&quot; alt=&quot;Clean and minimal, old looking Kodi standard menu&quot; style=&quot;max-width: 100%; height: auto;&quot;&gt;
+&lt;p&gt;There are some better interfaces, which is easy enough to download and install, but in general I guess there is some work to do on the UX and the feeling of the graphics.
+Not much of a critic (as I only make &lt;code&gt;TUIs&lt;&#x2F;code&gt; - if I really have to) but a strong suggestion in order to make a valid alternative to streaming services for non technical people.&lt;&#x2F;p&gt;
+&lt;p&gt;Then, the worse point for me, media server integration.
+There is no specific advantage in using Kodi&#x2F;Emby.
+If I spent several days setting up my media server and streaming player with hardware accelerated transcoding, I then still have to kludge the jellyfin way into kodi to use that.
+If not, use samba shares or other file system shares 🤔&lt;&#x2F;p&gt;
+&lt;p&gt;Samba with my NAS works fine, but it should really be simpler (ideally &lt;em&gt;off the shelf&lt;&#x2F;em&gt;) to just connect Kodi directly to a Jellyfin server and synchronize libraries.
+The jellyfin plugins worked just fine, but I&#x27;m thinking of the layman, the ecosystem still feels too fragmented.&lt;&#x2F;p&gt;
+&lt;p&gt;Now for the pros:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;full linux environment with native ssh access 💖&lt;&#x2F;li&gt;
+&lt;li&gt;the OSMC installation media setup works great and is multiplatform 💯&lt;&#x2F;li&gt;
+&lt;li&gt;OSMC installed and ran flawlessly&lt;&#x2F;li&gt;
+&lt;li&gt;Library setup and sync is easy and works very well (3&#x2F;10 difficulty for a &#x27;layman&#x27;, 0&#x2F;10 for a sysadmin)&lt;&#x2F;li&gt;
+&lt;li&gt;Playback is smooth (4k - possibly transcoded, didn&#x27;t really check - 30fps over wifi)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And one great surprise for me: CEC over HDMI works perfectly on first try!
+This means that my family is going to &lt;em&gt;actually use it&lt;&#x2F;em&gt;, as they won&#x27;t be restricted by a less friendly looking keyboard laying around the couch, but the TV remote works with Kodi now.
+The menus are easy to browse with the remote, and the input lag is up to speed with basically any &lt;del&gt;smart&lt;&#x2F;del&gt; &lt;em&gt;commercial&lt;&#x2F;em&gt; TV.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ideas-for-the-next-level&quot;&gt;Ideas for the next level&lt;&#x2F;h2&gt;
+&lt;p&gt;Hardware might be already sorted, I plan on trying OSMC Vero4k in the future, and see if that fixes the main RPI4 limitation of 60fps at 4k.
+But if I had to draft the system architecture for such a device:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Small sized application core, possibly with integrated (up to) HEVC10&#x2F;12 decoding&lt;&#x2F;li&gt;
+&lt;li&gt;HDMI 2.1 output with proper 4k60 HDR support&lt;&#x2F;li&gt;
+&lt;li&gt;Dual-band Wi-Fi 6 and Gigabit (or 2.5Gb) Ethernet (for stable streaming)&lt;&#x2F;li&gt;
+&lt;li&gt;Sufficient RAM (≥ 2 GB) to cache large media libraries&lt;&#x2F;li&gt;
+&lt;li&gt;eMMC or NVMe storage option for faster boot and metadata access&lt;&#x2F;li&gt;
+&lt;li&gt;Silent cooling (passive or near-silent fanless design)&lt;&#x2F;li&gt;
+&lt;li&gt;Optional external storage expansion (USB-C &#x2F; SATA)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;For the software:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;wizard-like setup for the libraries&lt;&#x2F;li&gt;
+&lt;li&gt;native Jellyfin (and Plex&#x2F;Emby) integration&lt;&#x2F;li&gt;
+&lt;li&gt;unified search across local files + media servers (seems to work, but with many duplicates)&lt;&#x2F;li&gt;
+&lt;li&gt;automatic codec and display optimization (e.g., detect 4k60 HDR and adjust)&lt;&#x2F;li&gt;
+&lt;li&gt;minimal “streaming service” mode with only essential functions exposed&lt;&#x2F;li&gt;
+&lt;li&gt;optional advanced mode for power users (SSH, Samba, NFS, etc.)&lt;&#x2F;li&gt;
+&lt;li&gt;continuous updates without breaking configs (transactional upgrades, rollbacks)&lt;&#x2F;li&gt;
+&lt;li&gt;integrated parental controls and multi-user profiles&lt;&#x2F;li&gt;
+&lt;li&gt;remote control HDMI-CEC + apps&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;So in the end, LibreELEC on RPi4 was a dead end for me this time: too many regressions, too much trial and error for something that should &lt;em&gt;just work&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;OSMC, on the other hand, booted, installed, and ran with barely any friction.
+Kodi isn’t perfect, the UI feels dated, and media server integration is still hacky, but the basics are there: HDMI-CEC works, playback is smooth enough, and my family can actually use it without me acting as tech support every night 🎉.&lt;&#x2F;p&gt;
+&lt;p&gt;That’s already a win.
+Next step will be trying proper dedicated hardware (Vero4k or similar) to see if it fixes the 4k&#x2F;60fps ceiling and gives a cleaner experience.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, job done: back to Kodi, in 2025.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

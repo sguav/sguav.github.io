@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1><a href="/"></a></h1>
+        <p></p>
+        <nav>
+            <a href="/">/dev/sguav</a>
+            | <a href="/about">About</a>
+            <!-- | <a href="/tags">Tags</a> -->
+        </nav>
+        <hr>
+    </header>
+    
+<article>
+  <h1>Back to Kodi with OSMC</h1>
+  <blockquote>
+<p><strong>Note:</strong> <em>This is the first post on the blog. It’s not the most technical deep-dive yet, but rather a write-up of a recent experiment setting up a media player. Think of it as a warm-up entry while I prepare more in-depth articles.</em></p>
+</blockquote>
+<p>I still remember when it was called XBMC: it felt like regaining the freedom and ownership of media we once had with VHS and DVDs.</p>
+<p>In 2025, being utterly dissatisfied with the current cesspool of smart android tv malware, clunky casting devices, and so forth, I am going back to it, via LibreELEC and raspberry pi.</p>
+<p>I've dusted off my RPI4B, and removed its SD card.
+I did a <code>dd</code> image copy of it, as there were still some data of my second home assistant server iteration (which I'm not running on ARM/RPI anymore), and then rewritten it with the latest <a href="https://releases.libreelec.tv/LibreELEC-RPi4.aarch64-12.2.0.img.gz">LibreELEC image for RPI 4</a>.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">$</span><span> gunzip LibreELEC-RPi4.aarch64-12.2.0.img.gz
+</span><span style="color:#bf616a;">$</span><span> sudo dd if=./LibreELEC-RPi4.aarch64-12.2.0.img of=/dev/sdd bs=4M status=progress
+</span></code></pre>
+<p>Then I popped the SD card back in, a previously working 7" HDMI display, and a keyboard to the RPI.</p>
+<p>Good start... then nothing.
+Just a promising boot sequence, stopping to the not-so-impressive <code>LibreELEC (Official): 12.2.0</code> white on black screen.</p>
+<p>Adding the <code>ssh</code> empty file to the boot partition didn't open up the RPI to ssh, and neither did tweaking <code>config.txt</code>.
+At this point I was pondering how I need to build a dedicated LibreELEC hardware, but no time for it now.</p>
+<p>Searching online I saw that some users have found issues with the <code>aarch64</code> version of LibreELEC combined with RPi4/5, and also thought that some regression bugs might have hit for the latest 12.x version.
+And so I downloaded LibreELEC 11.0.6 (arm version) and flashed that, tweaked <code>config.txt</code>, created the ssh file...</p>
+<p>Nothing, even worse.</p>
+<p>Pull the SD out, <code>fsck</code> boot partition, <code>e2fsck</code> storage partition, errors corrected.</p>
+<p>NOTHING.</p>
+<p>And so, could it still be the SD card?
+Downloaded raspios, flashed it, and...
+Booted with absolutely no issues, I didn't even have to change hdmi options.</p>
+<p>So, I guess that we'll install Kodi on a debian based distribution then.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">$</span><span> sudo apt update
+</span><span style="color:#bf616a;">$</span><span> sudo apt upgrade</span><span style="color:#bf616a;"> -y
+</span><span style="color:#bf616a;">$</span><span> sudo apt install kodi</span><span style="color:#bf616a;"> -y
+</span><span style="color:#bf616a;">$</span><span> kodi-standalone
+</span><span style="color:#bf616a;">[...]
+</span><span style="color:#bf616a;">Segmentation</span><span> fault
+</span></code></pre>
+<p>Apparently not.</p>
+<h2 id="revisiting-the-distro">Revisiting the distro</h2>
+<p>Eventually I discovered <a href="https://osmc.tv/download/">OSMC</a>, which already looks better because...
+<a href="https://osmc.tv/vero/">They've actually designed a dedicated hardware for that</a>!
+I gave the software a try, I felt more confident in the project since they provide a convenient <a href="https://ftp.fau.de/osmc/osmc/download/installers/osmc-installer.AppImage">AppImage installer</a> to automatically configure the SD card image.
+It boots and starts installing the necessary files.</p>
+<p>On my 1080p portable HDMI screen I see the reboot splash and then...<em>just static noise</em>?</p>
+<p>It turns out on the main 4k/50" screen it works fine, but apparently there are some issues with RPI4 and legacy displays, a problem I won't delve in this time.
+And after setting up the library connections and jellyfin plugin (the wifi connection must be setup at the SD configuration, so that the RPI wireless peripheral is correctly installed) everything just worked.</p>
+<p>I suppose I've found the solution!
+So now, after the story part, some considerations.</p>
+<h2 id="pros-and-cons">Pros and Cons</h2>
+<p>Let's start with the downsides.</p>
+<p>While not an OSMC issue, raspberrypi 4 is still stuck at 30fps for 4k output.
+Dual HDMI is great, but in the media scenario it’s not as useful, a stronger hardware platform becomes necessary - which gives more points to consider Vero4k+.</p>
+<p>Kodi is great, but in 2025 the standard UI - at least used in the OSMC setup - is kind of dated looking.</p>
+<img src="/images/kodi-menu.png" alt="Clean and minimal, old looking Kodi standard menu" style="max-width: 100%; height: auto;">
+<p>There are some better interfaces, which is easy enough to download and install, but in general I guess there is some work to do on the UX and the feeling of the graphics.
+Not much of a critic (as I only make <code>TUIs</code> - if I really have to) but a strong suggestion in order to make a valid alternative to streaming services for non technical people.</p>
+<p>Then, the worse point for me, media server integration.
+There is no specific advantage in using Kodi/Emby.
+If I spent several days setting up my media server and streaming player with hardware accelerated transcoding, I then still have to kludge the jellyfin way into kodi to use that.
+If not, use samba shares or other file system shares 🤔</p>
+<p>Samba with my NAS works fine, but it should really be simpler (ideally <em>off the shelf</em>) to just connect Kodi directly to a Jellyfin server and synchronize libraries.
+The jellyfin plugins worked just fine, but I'm thinking of the layman, the ecosystem still feels too fragmented.</p>
+<p>Now for the pros:</p>
+<ul>
+<li>full linux environment with native ssh access 💖</li>
+<li>the OSMC installation media setup works great and is multiplatform 💯</li>
+<li>OSMC installed and ran flawlessly</li>
+<li>Library setup and sync is easy and works very well (3/10 difficulty for a 'layman', 0/10 for a sysadmin)</li>
+<li>Playback is smooth (4k - possibly transcoded, didn't really check - 30fps over wifi)</li>
+</ul>
+<p>And one great surprise for me: CEC over HDMI works perfectly on first try!
+This means that my family is going to <em>actually use it</em>, as they won't be restricted by a less friendly looking keyboard laying around the couch, but the TV remote works with Kodi now.
+The menus are easy to browse with the remote, and the input lag is up to speed with basically any <del>smart</del> <em>commercial</em> TV.</p>
+<h2 id="ideas-for-the-next-level">Ideas for the next level</h2>
+<p>Hardware might be already sorted, I plan on trying OSMC Vero4k in the future, and see if that fixes the main RPI4 limitation of 60fps at 4k.
+But if I had to draft the system architecture for such a device:</p>
+<ul>
+<li>Small sized application core, possibly with integrated (up to) HEVC10/12 decoding</li>
+<li>HDMI 2.1 output with proper 4k60 HDR support</li>
+<li>Dual-band Wi-Fi 6 and Gigabit (or 2.5Gb) Ethernet (for stable streaming)</li>
+<li>Sufficient RAM (≥ 2 GB) to cache large media libraries</li>
+<li>eMMC or NVMe storage option for faster boot and metadata access</li>
+<li>Silent cooling (passive or near-silent fanless design)</li>
+<li>Optional external storage expansion (USB-C / SATA)</li>
+</ul>
+<p>For the software:</p>
+<ul>
+<li>wizard-like setup for the libraries</li>
+<li>native Jellyfin (and Plex/Emby) integration</li>
+<li>unified search across local files + media servers (seems to work, but with many duplicates)</li>
+<li>automatic codec and display optimization (e.g., detect 4k60 HDR and adjust)</li>
+<li>minimal “streaming service” mode with only essential functions exposed</li>
+<li>optional advanced mode for power users (SSH, Samba, NFS, etc.)</li>
+<li>continuous updates without breaking configs (transactional upgrades, rollbacks)</li>
+<li>integrated parental controls and multi-user profiles</li>
+<li>remote control HDMI-CEC + apps</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>So in the end, LibreELEC on RPi4 was a dead end for me this time: too many regressions, too much trial and error for something that should <em>just work</em>.</p>
+<p>OSMC, on the other hand, booted, installed, and ran with barely any friction.
+Kodi isn’t perfect, the UI feels dated, and media server integration is still hacky, but the basics are there: HDMI-CEC works, playback is smooth enough, and my family can actually use it without me acting as tech support every night 🎉.</p>
+<p>That’s already a win.
+Next step will be trying proper dedicated hardware (Vero4k or similar) to see if it fixes the 4k/60fps ceiling and gives a cleaner experience.</p>
+<p>For now, job done: back to Kodi, in 2025.</p>
+
+  
+    <hr>
+    Tags:
+    
+        <span>
+          <a href="https://sguav.github.io/tags/sw/">sw</a>
+        </span>
+    
+        <span>
+          <a href="https://sguav.github.io/tags/hw/">hw</a>
+        </span>
+    
+        <span>
+          <a href="https://sguav.github.io/tags/rpi/">rpi</a>
+        </span>
+    
+        <span>
+          <a href="https://sguav.github.io/tags/sysadmin/">sysadmin</a>
+        </span>
+    
+        <span>
+          <a href="https://sguav.github.io/tags/media/">media</a>
+        </span>
+    
+  
+</article>
+
+    <footer><hr><p><small>© 2025 sguav</small></p></footer>
+</body>
+</html>
